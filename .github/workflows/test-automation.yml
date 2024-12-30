@@ -19,6 +19,16 @@ jobs:
         with:
           node-version: lts/*
 
+      # Install Allure CLI
+      - name: Install Allure CLI
+        run: |
+          sudo apt update
+          sudo apt install -y openjdk-11-jre
+          curl -o allure-commandline.zip -sSL https://github.com/allure-framework/allure2/releases/download/2.22.5/allure-2.22.5.zip
+          sudo unzip allure-commandline.zip -d /opt/allure
+          sudo ln -s /opt/allure/allure-2.22.5/bin/allure /usr/local/bin/allure
+          allure --version
+
       # Backend setup
       - name: Setup Backend
         run: |
