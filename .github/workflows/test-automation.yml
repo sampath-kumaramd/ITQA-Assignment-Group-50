@@ -1,0 +1,71 @@
+name: Test Automation
+
+on:
+  push:
+    branches: [ "main", "dev", "ci-pipeline" ]
+  pull_request:
+    branches: [ "main", "dev", "ci-pipeline" ]
+
+jobs:
+  test:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout repository
+      - uses: actions/checkout@v4
+
+      # Setup Node.js
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      # Backend setup
+      - name: Setup Backend
+        run: |
+          cd backend
+          npm ci
+          java -jar target/demo-0.0.1-SNAPSHOT.jar &
+          sleep 20 
+
+      # Run Backend Tests
+      - name: Run Backend Tests
+        run: |
+          cd backend
+          npm test
+        continue-on-error: true
+
+      # Frontend setup
+      - name: Setup Frontend
+        run: |
+          cd frontend
+          npm ci
+          npx playwright install --with-deps
+
+      # Run Frontend Tests
+      - name: Run Frontend Tests
+        run: |
+          cd frontend
+          npm test
+        continue-on-error: true
+
+      # Generate Allure Report
+      - name: Merge Allure Reports
+        run: |
+          mkdir -p combined-report/allure-results
+          cp -R backend/allure-results/* combined-report/allure-results/ || true
+          cp -R frontend/allure-results/* combined-report/allure-results/ || true
+          npx allure generate combined-report/allure-results --clean -o combined-report/allure-report
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout repository
+      - uses: actions/checkout@v4
+
+      # Deploy Allure Report to GitHub Pages
+      - name: Deploy Allure Report
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: combined-report/allure-report
