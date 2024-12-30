@@ -2,9 +2,9 @@ name: Run tests and publish report
 
 on:
   push:
-    branches: [ "main", "dev", "CI-Pipeline" ]
+    branches: [ "main", "dev", "ci-pipeline" ]
   pull_request:
-    branches: [ "main", "dev", "CI-Pipeline" ]
+    branches: [ "main", "dev", "ci-pipeline" ]
 
 jobs:
   test:
