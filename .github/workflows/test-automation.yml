@@ -44,6 +44,15 @@ jobs:
           npm test
         continue-on-error: true
 
+      - name: Debug directories
+        run: |
+          echo "Backend directory contents:"
+          ls -la backend
+          echo "Frontend directory contents:"
+          ls -la frontend
+          echo "gh-pages directory contents:"
+          ls -la gh-pages
+
       # Load Allure report history
       - name: Load test report history
         uses: actions/checkout@v3
