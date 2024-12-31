@@ -55,6 +55,7 @@ jobs:
           
       - name: Debug directories
         run: |
+          mkdir -p gh-pages/allure-history
           echo "Backend directory contents:"
           ls -la backend
           echo "Frontend directory contents:"
