@@ -1,0 +1,94 @@
+name: Run tests and publish report
+
+on:
+  push:
+    branches: [ "main", "dev", "ci-pipeline" ]
+  pull_request:
+    branches: [ "main", "dev", "ci-pipeline" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout repository
+      - uses: actions/checkout@v3
+
+      # Setup Node.js
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      # Setup JDK for Allure
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: zulu
+          java-version: 17
+
+      # Backend setup and tests
+      - name: Backend Tests
+        run: |
+          cd backend
+          npm ci
+          java -jar target/demo-0.0.1-SNAPSHOT.jar &
+          sleep 20 
+          npm test
+        continue-on-error: true
+
+      # Frontend setup and tests
+      - name: Frontend Tests
+        run: |
+          cd frontend
+          npm ci
+          npx playwright install --with-deps
+          npm test
+        continue-on-error: true
+
+      # Debug Backend Test Results
+      - name: Debug UI Results
+        if: always()
+        run: |
+          echo "Backend Test Results Content:"
+          ls -R backend/allure-results/
+          echo "Number of backend result files:"
+          find backend/allure-results -type f | wc -l
+
+      # Debug Frontend Test Results
+      - name: Debug UI Results
+        if: always()
+        run: |
+          echo "Frontend Test Results Content:"
+          ls -R frontend/allure-results/
+          echo "Number of frontend result files:"
+          find frontend/allure-results -type f | wc -l
+
+      # Combine test results with verification
+      - name: Combine Allure Results
+        if: always()
+        run: |
+          mkdir -p allure-results
+          cp -r backend/allure-results/* allure-results/ || true
+          cp -r frontend/allure-results/* allure-results/ || true
+          echo "Combined Results Content:"
+          ls -R allure-results/
+          echo "Total number of result files:"
+          find allure-results -type f | wc -l
+
+      # Generate Allure Report
+      - name: Generate Allure Report
+        uses: simple-elf/allure-report-action@master
+        if: always()
+        with:
+          allure_results: allure-results
+          allure_report: allure-report
+          allure_history: allure-history
+
+      # Deploy Allure Report
+      - name: Deploy Allure Report
+        if: always()
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./allure-report
+          publish_branch: gh-pages
+          force_orphan: true
