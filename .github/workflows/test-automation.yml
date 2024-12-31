@@ -70,9 +70,7 @@ jobs:
         with:
           gh_pages: gh-pages
           allure_history: allure-history
-          allure_results: |
-            backend/allure-results
-            frontend/allure-results
+          allure_results: allure-results
 
       # Publish Allure report to GitHub Pages
       - name: Publish test report
