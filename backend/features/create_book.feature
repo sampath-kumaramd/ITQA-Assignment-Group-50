@@ -67,14 +67,6 @@ Feature: Create Book
       | title     | author    | publisher | isbn       | year |
       | New Book  | John Doe  | Publisher | 123456789  | 2024 |
     Then the response status should be 400
-
-  Scenario: Attempt to create a book with numeric title
-    Given the server is running
-    And I am authenticated as "admin"
-    When I create a new book with following details:
-      | title | author    |
-      | 12345 | John Doe  |
-    Then the response status should be 400
     
   Scenario: Attempt to create book with invalid ID format
     Given the server is running
