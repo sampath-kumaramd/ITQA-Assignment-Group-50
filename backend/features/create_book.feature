@@ -44,3 +44,42 @@ Feature: Create Book
       | id  | new Title    | new Author     |
     Then the response status should be 400
     
+  Scenario: Attempt to create a book with numeric author name
+    Given the server is running
+    And I am authenticated as "admin"
+    When I create a new book with following details:
+      | title          | author |
+      | Valid Title    | 12345  |
+    Then the response status should be 400
+
+  Scenario: Attempt to create a book with wrong key names
+    Given the server is running
+    And I am authenticated as "admin"
+    When I create a new book with following details:
+      | bookTitle | bookAuthor |
+      | New Book  | John Doe   |
+    Then the response status should be 400
+
+  Scenario: Attempt to create a book with extra fields
+    Given the server is running
+    And I am authenticated as "admin"
+    When I create a new book with following details:
+      | title     | author    | publisher | isbn       | year |
+      | New Book  | John Doe  | Publisher | 123456789  | 2024 |
+    Then the response status should be 400
+
+  Scenario: Attempt to create a book with numeric title
+    Given the server is running
+    And I am authenticated as "admin"
+    When I create a new book with following details:
+      | title | author    |
+      | 12345 | John Doe  |
+    Then the response status should be 400
+    
+  Scenario: Attempt to create book with invalid ID format
+    Given the server is running
+    And I am authenticated as "admin"
+    When I create a new book with following details:
+      | id      | title         | author        |
+      | abc123  | New Book  | Author  |
+    Then the response status should be 400
