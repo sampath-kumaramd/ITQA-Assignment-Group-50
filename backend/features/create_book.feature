@@ -82,4 +82,4 @@ Feature: Create Book
     When I create a new book with following details:
       | id      | title         | author        |
       | abc123  | New Book  | Author  |
-    Then the response status should be 400
+    Then the response status should be 400

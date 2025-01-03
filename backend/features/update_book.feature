@@ -37,10 +37,10 @@ Feature: Update Book
   Scenario: Attempt to update book with empty title field
     Given the server is running
     And I am authenticated as "admin"
-    And a book with ID 1 exists
+    And a book with ID 4 exists
     When I update the book with following details:
       | id | title | author |
-      | 1  |       | Testing Author        |
+      | 4  |       | Testing Author        |
     Then the response status should be 400
 
   Scenario: Attempt to update book with empty author field
@@ -82,6 +82,7 @@ Feature: Update Book
   Scenario: Attempt to update non-existent book
     Given the server is running
     And I am authenticated as "admin"
+    And updating a book with ID 999
     When I update the book with following details:
       | id   | title         | author        |
       | 999  | Updated Book  | Updated Author|
