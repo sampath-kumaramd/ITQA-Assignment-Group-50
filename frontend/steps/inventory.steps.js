@@ -5,6 +5,7 @@ Given("I am on the inventory page", async function () {
   await expect(this.page).toHaveURL(/.*inventory.html/);
 });
 
+
 Then("I should see the shopping cart icon", async function () {
   const cartIcon = await this.page.locator(".shopping_cart_link");
   await expect(cartIcon).toBeVisible();
