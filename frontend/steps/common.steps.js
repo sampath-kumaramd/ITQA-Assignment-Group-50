@@ -1,6 +1,13 @@
 const { Given, When, Then } = require("@cucumber/cucumber");
 const { expect } = require("@playwright/test");
 
+Given("I am logged in as {string}", async function (username) {
+  await this.page.goto("https://www.saucedemo.com/");
+  await this.page.fill("#user-name", username);
+  await this.page.fill("#password", "secret_sauce");
+  await this.page.click("#login-button");
+});
+
 Given("I have items in cart", async function () {
   await this.page.click(`[data-test="add-to-cart-sauce-labs-backpack"]`);
 });
