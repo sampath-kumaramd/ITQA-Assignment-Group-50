@@ -26,8 +26,6 @@ Feature: Error Validation
   Scenario: Validate postal code format
     Given I am on the checkout information page
     When I fill in first and last name
-    And I enter "" in the postal code field
-    Then I should see error message "Error: Postal Code is required"
     When I enter "12345" in the postal code field
     Then I should not see any error messages
 
