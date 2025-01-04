@@ -34,20 +34,6 @@ Scenario: Complete checkout
     When I click on the "Finish" button
     Then I should be redirected to the complete page  
 
-Scenario: Complete checkout
-    Given I am logged in to Swag Labs
-    And I have items in my cart
-    And I have clicked on the checkout button
-    And I have filled in the checkout information
-      | firstName | lastName | postalCode |
-      | John      | Doe      | 12345      |
-    And I have clicked on the continue button
-    And I am on the overview page
-    And I have clicked on the "Finish" button
-    And I am on the complete page
-    When I click on the "Back Home" button
-    Then I should be redirected to the products page  
-
 Scenario: Return to products page using Continue Shopping button
     Given I am logged in to Swag Labs
     And I am on the cart page
